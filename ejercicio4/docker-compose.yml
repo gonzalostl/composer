@@ -1,0 +1,35 @@
+services:
+  mi-mysql-compose:
+    container_name: mi-mysql-compose
+    image: mysql
+    networks:
+      - mi-mysql-red-compose
+    volumes:
+      - mi-mysql-vol-compose:/data/db
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+    stdin_open: true
+    tty: true
+
+  mi-dashboard-compose:
+    container_name: mi-dashboard-compose
+    image: phpmyadmin
+    networks:
+      - mi-mysql-red-compose
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=mi-mysql-compose
+
+    stdin_open: true
+    tty: true
+
+networks:
+  mi-mysql-red-compose:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+
+volumes:
+  mi-mysql-vol-compose:
